@@ -1,4 +1,4 @@
-CC = x86_64-elf-gcc
+CC = /home/kime/Documents/cpp_projects/cross-compiler/x86_64-elf-cross/bin/x86_64-elf-gcc
 CFLAGS = -g -fno-pic               \
     -mno-sse                       \
     -mno-sse2                      \
@@ -35,11 +35,11 @@ run: SalieriOS
 	sudo mount `cat loopback_dev`p2 SalieriOS_image
 	sudo mkdir SalieriOS_image/boot
 	sudo cp ./SalieriOS.elf SalieriOS_image/boot/
-	sudo cp ./qloader2.cfg SalieriOS_image/
+	sudo cp ./limine.cfg SalieriOS_image/
 	sync
 	sudo umount SalieriOS_image/
 	sudo losetup -d `cat loopback_dev`
 	rm -rf SalieriOS_image loopback_dev
-	../qloader2-master/qloader2-install ../qloader2-master/qloader2.bin SalieriOS.img 2048
+	../limine/limine-install ../limine/limine.bin SalieriOS.img 2048
 	qemu-system-x86_64 -hda SalieriOS.img -serial stdio -d int -machine smm=off -no-reboot -no-shutdown
 	

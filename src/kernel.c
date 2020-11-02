@@ -1,7 +1,8 @@
 #include "vga.h"
 #include "stivale.h"
 #include "pmm.h"
-#include <idt.h>
+#include "vmm.h"
+#include "idt.h"
 void kmain(stivale_info_t *info) {
 
 	terminal_initialize();
@@ -13,7 +14,8 @@ void kmain(stivale_info_t *info) {
 	
 	terminal_writestring("Welcome to SalieriOS!\n");
 	
-	volatile int cum = 0;
-	volatile int shit = 500 / cum;
+	vmm_create_pagemap();
+	//volatile int cum = 0;
+	//volatile int shit = 500 / cum;
 
 }

@@ -6,6 +6,7 @@ stivale_header:
     dw 0            ; fb_width
     dw 0            ; fb_height
     dw 0            ; bpp
+    dq 0
 
 section .data
 

@@ -13,19 +13,19 @@ SECTIONS
     }
 
     .text : ALIGN(4K) {
-        *(.text*)
+        KEEP(*(.text*))
     }
 
     .rodata : ALIGN(4K) {
-        *(.rodata*)
+        KEEP(*(.rodata*))
     }
 
     .data : ALIGN(4K) {
-        *(.data*)
+        KEEP(*(.data*))
     }
 
     .bss : ALIGN(4K) {
-        *(.bss*)
-        *(COMMON)
+        KEEP(*(.bss*))
+        KEEP(*(COMMON))
     }
 }
