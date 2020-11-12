@@ -6,16 +6,38 @@
 void kmain(stivale_info_t *info) {
 
 	terminal_initialize();
-	terminal_writestring("[  OK  ] GDT Initialised!\n"); //check it
+	terminal_writeok("GDT Initialised!");
 	load_idt();
-	terminal_writestring("[  OK  ] IDT Initialised!\n"); //check it
+	terminal_writeok("IDT Initialised!"); //check it
 	
 	init_pmn(info);
 	
 	terminal_writestring("Welcome to SalieriOS!\n");
+	//terminal_writerror("Test error!");
+
+	pagemap_t* test;
+
+	if(vmm_create_pagemap(test))
+	{
+		terminal_writeok("Pagemap Created!");
+	}
+	else
+	{
+		terminal_writerror("Failed to create Pagemap!");
+	}
+
+	uint64_t* fizi = 0x297DE000;
+	uint64_t* anime;
+	if(vmm_map_page(test, fizi, anime, 0b11))
+	{
+		terminal_writeok("VMM Mapped Memory!");
+	}
+	else
+	{
+		terminal_writerror("Failed to map memory!");
+	}
 	
-	vmm_create_pagemap();
-	//volatile int cum = 0;
-	//volatile int shit = 500 / cum;
+	vmm_unmap_page(test, fizi);
+
 
 }

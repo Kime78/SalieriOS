@@ -31,14 +31,14 @@ void init_pmn(stivale_info_t *info)
     }
 
     if (!bitmap) {
-        terminal_writestring("[FAILED] Could not find address to put bitmap! Halting.");
+        terminal_writerror("Could not find address to put bitmap! Halting.");
         while (1) {
             asm volatile("hlt");
         }
     }
     else
     {
-        terminal_writestring("[  OK  ] Bitmap Initialised!\n");
+        terminal_writeok("Bitmap Initialised!");
     }
     
     
@@ -63,7 +63,7 @@ void init_pmn(stivale_info_t *info)
             }
         }
     }
-    terminal_writestring("[  OK  ] PMM initialised!\n");
+    terminal_writeok("PMM initialised!");
 }
 
 void pmm_set_page_used(uint64_t page) {

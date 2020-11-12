@@ -43,7 +43,7 @@ void terminal_putentryat(char c, uint8_t color, size_t x, size_t y)
 	terminal_buffer[index] = vga_entry(c, color);
 }
  
-void terminal_putchar(char c)
+void terminal_putchar(char c, uint8_t color)
 {
     if (c == '\n')
     {
@@ -51,7 +51,7 @@ void terminal_putchar(char c)
         terminal_column = 0;
         return;
     }
-    terminal_putentryat(c, terminal_color, terminal_column, terminal_row);
+    terminal_putentryat(c, color, terminal_column, terminal_row);
     if(++terminal_column == VGA_WIDTH) {
         terminal_column = 0;
         if(++terminal_row == VGA_HEIGHT)
@@ -76,14 +76,33 @@ void terminal_putchar(char c)
     }
 }
  
-void terminal_write(const char* data, size_t size) 
+void terminal_write(const char* data, size_t size, uint8_t color) 
 {
 	for (size_t i = 0; i < size; i++)
-		terminal_putchar(data[i]);
+		terminal_putchar(data[i], color);
 }
  
 void terminal_writestring(const char* data) 
 {
-	terminal_write(data, strlen(data));
+	terminal_write(data, strlen(data), VGA_COLOR_WHITE);
 }
 
+void terminal_writerror(const char* data)
+{
+    terminal_putchar('[', VGA_COLOR_WHITE);
+    terminal_write("FAILED", strlen("FAILED"), VGA_COLOR_RED);
+    terminal_putchar(']', VGA_COLOR_WHITE);
+    terminal_putchar(' ', VGA_COLOR_WHITE);
+    terminal_write(data, strlen(data), VGA_COLOR_WHITE);
+    terminal_putchar('\n', VGA_COLOR_WHITE);
+}
+
+void terminal_writeok(const char* data)
+{
+    terminal_putchar('[', VGA_COLOR_WHITE);
+    terminal_write("  OK  ", strlen("  OK  "), VGA_COLOR_GREEN);
+    terminal_putchar(']', VGA_COLOR_WHITE);
+    terminal_putchar(' ', VGA_COLOR_WHITE);
+    terminal_write(data, strlen(data), VGA_COLOR_WHITE);
+    terminal_putchar('\n', VGA_COLOR_WHITE);
+}
