@@ -12,7 +12,6 @@ void kmain(stivale_info_t *info) {
 	
 	init_pmn(info);
 	
-	terminal_writestring("Welcome to SalieriOS!\n");
 	//terminal_writerror("Test error!");
 
 	pagemap_t* test;
@@ -24,19 +23,15 @@ void kmain(stivale_info_t *info) {
 	{
 		terminal_writerror("Failed to create Pagemap!");
 	}
-	vmm_setup_pages(test);
 
-	// uint64_t fizi = 0x1000;
-	// uint64_t anime = 0x2000;
-	// if(vmm_map_page(test, fizi, anime, 0b11))
-	// {
-	// 	terminal_writeok("VMM Mapped Memory!");
-	// }
-	// else
-	// {
-	// 	terminal_writerror("Failed to map memory!");
-	// }
-	int volatile cum = 0;
-	int volatile shit = 5000;
-	//shit = shit / cum;
+	if(vmm_setup_pages()) 
+	{
+		terminal_writeok("VMM was setup correctly!");
+	}
+	else
+	{
+		terminal_writerror("An error was encountered when creating the VMM");
+	}
+	terminal_writestring("Welcome to SalieriOS!\n");
+
 }

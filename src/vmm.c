@@ -11,7 +11,7 @@ uintptr_t higher_half(uintptr_t arg)
     return arg + KERNEL_PHYS_OFFSET;
 }
 
-bool vmm_setup_pages(pagemap_t* map)
+bool vmm_setup_pages()
 {
     static pagemap_t __kp;
     pagemap_t* kernel_map = &__kp;
@@ -24,9 +24,9 @@ bool vmm_setup_pages(pagemap_t* map)
     }
 
     //map the first 32 MiB
-    for (size_t i = 0; i < 0x100000000; i += 0x1000) 
+    for (size_t i = 0; i < 0x10000000; i += 0x1000) 
     {
-        vmm_map_page(kernel_map, i, higher_half(i), 0b11);
+        vmm_map_page(kernel_map, higher_half(i), i, 0b11);
         //uintptr_t addr = i * 0x1000;
         //vmm_map_page(kernel_map, addr, addr, 0b11);
         //vmm_map_page(kernel_map, addr, MEM_PHYS_OFFSET + addr, 0x03);
@@ -82,16 +82,16 @@ uint64_t* walk_to_page_and_map(uint64_t* current, uint16_t index)
 bool vmm_map_page(pagemap_t *page_map, uintptr_t virt, uintptr_t phys, uintptr_t flags)
 {
     uint16_t offset = virt & 0b111111111111;    
-    uint16_t level1 = (virt >> 12) & 0b111111111;
-    uint16_t level2 = (virt >> 21) & 0b111111111;
-    uint16_t level3 = (virt >> 30) & 0b111111111;
-    uint16_t level4 = (virt >> 39) & 0b111111111;
+    uint16_t level1 = (virt >> 12);
+    uint16_t level2 = (virt >> 21);
+    uint16_t level3 = (virt >> 30);
+    uint16_t level4 = (virt >> 39);
 
     uint64_t* root = page_map->pml4;
     
     uint64_t* pml3 = walk_to_page_and_map(root, level4);
-    uint64_t* pml2 = walk_to_page_and_map(pml3, level3);
-    uint64_t* pml1 = walk_to_page_and_map(pml2, level2);
+    uint64_t* pml2 = walk_to_page_and_map(root, level3);
+    uint64_t* pml1 = walk_to_page_and_map(root, level2);
 
     pml1[level1] = phys | flags;
     
@@ -111,8 +111,8 @@ bool vmm_unmap_page(pagemap_t *page_map, uintptr_t virt)
 
     uint64_t* root = page_map->pml4;
     uint64_t* pml3 = walk_to_page_and_map(root, level4);
-    uint64_t* pml2 = walk_to_page_and_map(pml3, level3);
-    uint64_t* pml1 = walk_to_page_and_map(pml2, level2);
+    uint64_t* pml2 = walk_to_page_and_map(root, level3);
+    uint64_t* pml1 = walk_to_page_and_map(root, level2);
 
     pml1[level1] = 0;
     return true;
