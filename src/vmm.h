@@ -13,5 +13,5 @@ typedef struct
 bool vmm_create_pagemap(pagemap_t *map);
 bool vmm_map_page(pagemap_t *page_map, uintptr_t virt, uintptr_t phys, uintptr_t flags);
 bool vmm_unmap_page(pagemap_t *page_map, uintptr_t virt);
-
+bool vmm_setup_pages(pagemap_t* map);
 #endif

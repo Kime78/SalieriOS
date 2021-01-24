@@ -111,7 +111,7 @@ uint64_t pmm_find_free_pages(uint64_t size) {
 }
 
 /* This function uses the find_free_pages function to find a chunk of pages, then marks them as allocated */
-void *pmm_alloc(uint64_t size) {
+void* pmm_alloc(uint64_t size) {
     uint64_t needed_pages = (size + 0x1000 - 1) / 0x1000;
     uint64_t free_page = pmm_find_free_pages(size);
 

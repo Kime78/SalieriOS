@@ -1,2 +1,4 @@
 limine.bin
 SalieriOS.elf
+src/idt.o
+src/vmm.o

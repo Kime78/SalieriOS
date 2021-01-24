@@ -7,6 +7,7 @@ void test_zero()
 }
 void load_idt()
 {
+    asm volatile ("sti");
     idtr_t idtr;
     idtEntry_t idt[256]; //maybe this should be global ??
    

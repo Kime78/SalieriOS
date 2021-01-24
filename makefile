@@ -8,7 +8,7 @@ CFLAGS = -g -fno-pic               \
     -mcmodel=kernel                \
     -ffreestanding                 \
     -fno-stack-protector           \
-    -O2                            \
+    -O0                           \
     -fno-omit-frame-pointer
 
 %.o: %.c
@@ -41,5 +41,5 @@ run: SalieriOS
 	sudo losetup -d `cat loopback_dev`
 	rm -rf SalieriOS_image loopback_dev
 	../limine/limine-install ../limine/limine.bin SalieriOS.img 2048
-	qemu-system-x86_64 -hda SalieriOS.img -serial stdio -d int -machine smm=off -no-reboot -no-shutdown
+	qemu-system-x86_64 -hda SalieriOS.img -serial stdio -d int -machine smm=off -no-reboot -no-shutdown -s -S
 	
