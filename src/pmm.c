@@ -118,6 +118,9 @@ void* pmm_alloc(uint64_t size) {
     for (uint64_t i = 0; i < needed_pages; i++)  {
         pmm_set_page_used(free_page + i);
     }
+
+    return (void *)((free_page + 1) * 4096);
+
 }
 
 /* This function just marks whatever pages free that are passed to it */
