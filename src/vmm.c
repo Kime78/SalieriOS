@@ -89,7 +89,8 @@ uintptr_t *walk_to_page_and_map(uint64_t *current, uint16_t index)
     }
     else
     {
-        ret = (uintptr_t)pmm_alloc(1);
+        ret = (uintptr_t)pmm_alloc(4096);
+        memset(ret, 0, 4096);
         if (ret == 0)
         {
             return NULL;
