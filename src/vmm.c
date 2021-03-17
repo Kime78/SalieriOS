@@ -3,8 +3,6 @@
 #include "vga.h"
 
 #define PAGE_TABLE_ENTRIES 512
-#define KERNEL_PHYS_OFFSET ((size_t)0xffffffff80000000)
-#define MEM_PHYS_OFFSET ((size_t)0xffff800000000000)
 
 uintptr_t higher_half(uintptr_t arg)
 {
@@ -27,9 +25,19 @@ bool vmm_setup_pages()
     }
 
     //map the first 32 MiB
-    for (size_t i = 0; i < 0x1000000; i += 0x1000)
+    for (size_t i = 0; i < 0x2000000; i += 0x1000)
     {
-        if (!vmm_map_page(kernel_map, higher_half(i), i, 0b11))
+        if (!vmm_map_page(kernel_map, i, i, 0b11))
+        {
+            return false;
+        }
+
+        if (!vmm_map_page(kernel_map, i + MEM_PHYS_OFFSET, i, 0b11))
+        {
+            return false;
+        }
+
+        if (!vmm_map_page(kernel_map, i + KERNEL_PHYS_OFFSET, i, 0b11 | (1 << 8)))
         {
             return false;
         }
@@ -38,6 +46,16 @@ bool vmm_setup_pages()
         //vmm_map_page(kernel_map, addr, MEM_PHYS_OFFSET + addr, 0x03);
         //vmm_map_page(kernel_map, addr, KERNEL_PHYS_OFFSET + addr, 0x03 | (1 << 8));
     }
+
+    // //map 4GB
+    // for (size_t i = 0; i < 0x100000000; i += 0x1000)
+    // {
+    //     if (!vmm_map_page(kernel_map, i + MEM_PHYS_OFFSET, i, 0b11))
+    //     {
+    //         return false;
+    //     }
+    // }
+
     asm volatile(
         "mov %0,%%cr3"
         :
